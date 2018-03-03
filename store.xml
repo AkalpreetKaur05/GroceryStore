@@ -1,0 +1,34 @@
+<catalogue>
+	<items>
+		<item>
+			<id>1</id>
+			<name>LUX bath soap</name>
+			<uom>50</uom>  <!-- Unit Of Measure -->
+			<unitSize>10</unitSize>
+			<unitPrice>
+				<amount>12.00</amount>
+				<currency>INR</currency>  <!-- Currency alpha3code -->
+			</unitPrice>
+			<quantity>
+				<stock>100</stock>
+				<measure>unit</measure> 
+			</quantity>	
+		</item>
+	    <item>
+			<id>2</id>
+			<name>Dove soap</name>
+			<uom>50</uom>  <!-- Unit Of Measure -->
+			<unitSize>10</unitSize>
+			<unitPrice>
+				<amount>30.00</amount>
+				<currency>INR</currency>  <!-- Currency alpha3code -->
+			</unitPrice>
+			<quantity>
+				<stock>100</stock>
+				<measure>unit</measure> 
+			</quantity>	
+	    </item>
+	
+	</items>
+</catalogue>
+

@@ -38,11 +38,42 @@ class customer2(check_price:Map[String,Double])
       new_value = new_value + quantity
       customer2.cart_items.update(item_name, new_value)
     }
-   // XML.save("C:/Users/hashmap/Downloads/store1.xml", (<catalogue>{item1.map(itemtoXml)}</catalogue>))
     customer2.listst+=bill
-    println("bill is "+bill)
-  }
-
+   // println("do u want to remove any item from cart???")
+    //var che=readChar()
+    /*che match {
+      case 'y' => {
+        println("enter name of item to remove & its quantity");
+        var itemrem = readLine()
+        var quant = readInt()("bill is " + bill)
+      }
+    }*/
+  /* def removefromcart(item_na:String,quantity:Int,car
+       //   removefromcart(itemrem,quant,customer2.cart_items)}
+      case 'n'=>0
+      }
+   // XML.save("C:/Users/hashmap/Downloads/store1.xml", (<catalogue>{item1.map(itemtoXml)}</catalogue>)
+    // customer2.listst+=bill
+    //printlnt_items:Map[String,Int])
+    {
+      if (cart_items.contains(item_na))
+      {
+        var value = cart_items.get(item_na)
+        var new_value = value match {
+          case Some(x) => x
+          case None => 0
+        }
+        if (new_value == 0) {
+          println("no item present")
+        }
+        else {
+          new_value = new_value - quantity
+          if (new_value > 0) {
+            cart_items.update(item_na, new_value)
+          }
+        }
+      }*/
+    }
 
 }
 object customer2 extends App {
@@ -83,6 +114,7 @@ object customer2 extends App {
   def orderSummary(cart_items: Map[String, Int]): Unit = {
     println("ur orders are as follows.... ")
     cart_items.foreach(println)
+
   }
 
   def calBill(liststo: ListBuffer[Double], cart_items: Map[String, Int]): Unit = {
@@ -90,6 +122,24 @@ object customer2 extends App {
     cart_items.foreach(println)
     println(cart_items)
     var total_bill = liststo.sum
+    var itemName=(new admin).checkSchemes()
+    println(itemName)
+    var no1=(cart_items.get(itemName))
+    println(no1)
+    var no2=no1 match
+    {
+      case Some(x)=>x
+      case None=>0
+    }
+    if(no2>=2)
+    {
+      var no3=(no2/2)
+      println("on purchase of "+no2+"items..... u get free .... "+no3+"items")
+      no3=no2+no3
+      cart_items.update(itemName,no3)
+    }
+    println(cart_items)
+
     println("total bill is " + total_bill)
   }
 

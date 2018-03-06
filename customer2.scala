@@ -1,10 +1,10 @@
 
-import xml._
 import scala.collection.mutable._
+import scala.xml._
 class customer2(check_price:Map[String,Double])
 {
   var bill:Double=0.0
-  val file = XML.loadFile("C:/Users/hashmap/Downloads/store.xml")
+  val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml")
   println("enter item you want to buy & its quantity")
   var name_item=scala.io.StdIn.readLine()
   var quantity=readInt()
@@ -86,7 +86,7 @@ object customer2 extends App {
   var map1: Map[Int, String] = Map()
   var check_price: Map[String, Double] = Map()
 
-  case class item(id: Int, name: String, uom: Int, price: Double, stock: Int)
+  case class item(id: Int, name: String, uom: String, price: Double, stock: Int)
 
   def itemtoXml(i: item): Node = {
     <item><id>={i.id - 4}</id>
@@ -98,11 +98,28 @@ object customer2 extends App {
 
 
   def toItem(node: Node): item = {
-    val id = (node \ "id").text.toInt
+    println("enter ur choice 1 for soap.... 2 for fruits....")
+    var read=readInt()
+
+    val id = (node \\"item" \ "id").text.toInt
     val name = (node \ "name").text
-    val uom = (node \ "uom").text.toInt
+    val uom = (node \ "uom").text
+    val stock = (node \\ "stock").text.toInt
+   val price = (node \\ "amount").text.toDouble
+    var list = List(id, name, uom, stock, price)
+    map1 += (stock -> name)
+    check_price += (name -> price)
+    listBu += stock
+    item(id, name, uom, price, stock)
+  }
+  def toItemNew(node: Node): item = {
+
+    val id = (node \\"item" \ "id").text.toInt
+    val name = (node \ "name").text
+    val uom = (node \ "uom").text
     val stock = (node \\ "stock").text.toInt
     val price = (node \\ "amount").text.toDouble
+    println("price is "+price)
     var list = List(id, name, uom, stock, price)
     map1 += (stock -> name)
     check_price += (name -> price)
@@ -122,6 +139,7 @@ object customer2 extends App {
     cart_items.foreach(println)
     println(cart_items)
     var total_bill = liststo.sum
+    println("total is "+total_bill)
     var itemName=(new admin).checkSchemes()
     println(itemName)
     var no1=(cart_items.get(itemName))
@@ -146,9 +164,21 @@ object customer2 extends App {
   read match {
     case 1 => {
       println("welcome !")
-      val file = XML.loadFile("C:/Users/hashmap/Downloads/store.xml")
-      val item1 = (file \\ "item").map(toItem)
-      item1.foreach(println)
+      println("**********")
+      println("Enter option...")
+      println("1. For Soaps")
+      println("2. For Fruits")
+      println("3. For Biscuits")
+      val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml")
+      //val item1 = (file \\"item").map(toItem)
+      //item1.foreach(println)
+      val item1 = (file \\"items"\\"category")
+
+      var option=readInt()
+      option=option-1
+      //println("items... "+item1(option))
+      var result=(item1(option)\\"item").map(toItemNew)
+      result.foreach(println)
       var obj = new customer2(check_price)
       println("do u want to continue    press y to continue & n for no")
       var read1 = readChar()
@@ -157,7 +187,7 @@ object customer2 extends App {
           new customer2(check_price);
           //calBill(listst, cart_items)
         }
-        case 'n' => println("thanks for shopping.... ur bill is")
+        case 'n' => println("thanks for shopping.... ur bill is"+calBill(listst,cart_items))
       }
       println("enter y to check order summary & n to not check..")
       var cal = readChar()

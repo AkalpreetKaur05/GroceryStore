@@ -78,8 +78,8 @@ class customer2(check_price:Map[String,Double])
 
 }
 object customer2 extends App {
-  println("enter 1 for customer login & 2 for admin login")
-  var read = readInt()
+
+  var read=1
   var listBu = ListBuffer[Int]()
   var listst = ListBuffer[Double]()
   var nameStore = ListBuffer[String]()
@@ -89,6 +89,7 @@ object customer2 extends App {
   var categorySel:Int=0
   var items1Scheme=ListBuffer[String]()
   var categorysch=mutable.HashMap[Int,ListBuffer[String]]()
+  mainn1()
   case class item(id: Int, name: String, uom: String, price: Double, stock: Int)
 
   def itemtoXml(i: item): Node = {
@@ -297,74 +298,68 @@ object customer2 extends App {
 
     println("total bill is " + total_bill)
   }
+ def mainn1() {
+   println("enter 1 for customer login & 2 for admin login")
+   var read=readInt()
+   read match {
+     case 1 => {
+       println("welcome !")
+       println("**********")
+       println("Enter option...")
+       println("1. For Soaps")
+       println("2. For Fruits")
+       println("3. For Biscuits")
+       val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml")
+       //val item1 = (file \\"item").map(toItem)
+       //item1.foreach(println)
+       val item1 = (file \\ "items" \\ "category")
 
-  read match {
-    case 1 => {
-      println("welcome !")
-      println("**********")
-      println("Enter option...")
-      println("1. For Soaps")
-      println("2. For Fruits")
-      println("3. For Biscuits")
-      val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml")
-      //val item1 = (file \\"item").map(toItem)
-      //item1.foreach(println)
-      val item1 = (file \\"items"\\"category")
+       var option1 = readInt()
+       categorySel = option1
+       option1 = option1 - 1
+       //println("items... "+item1(option))
+       var result = (item1(option1) \\ "item").map(toItemNew)
+       result.foreach(println)
+       var res = (item1(option1) \\ "item" \\ "name")
+       for (i <- 0 to res.length - 1) {
+         items1Scheme += (res(i).text)
+       }
+       println(items1Scheme)
+       categorysch += (categorySel -> items1Scheme)
+       var obj = new customer2(check_price)
+       println("do u want to continue    press y to continue & n for no")
+       var read1 = readChar()
+       read1 match {
+         case 'y' => {
+           new customer2(check_price)
+           //calBill(listst, cart_items)
+         }
+         case 'n' => println("thanks for shopping.... ur bill is" + calBill(listst, cart_items))
+       }
+       println("enter y to check order summary & n to not check..")
+       var cal = readChar()
+       cal match {
+         case 'y' => orderSummary(cart_items)
+         case 'n' => 0
+       }
+       println("enter y to check bill  & n for not")
+       var cal1 = readChar()
+       cal1 match {
+         case 'y' => calBill(listst, cart_items)
+         case 'n' => 0
+       }
+     }
+     // calBill(listst,cart_items)
 
-      var option1=readInt()
-      categorySel=option1
-      option1=option1-1
-      //println("items... "+item1(option))
-      var result=(item1(option1)\\"item").map(toItemNew)
-      result.foreach(println)
-      var res=(item1(option1)\\"item"\\"name")
-      for(i<-0 to res.length-1)
-        {
-          items1Scheme+=(res(i).text)
-        }
-        println(items1Scheme)
-      categorysch+=(categorySel->items1Scheme)
-      var obj = new customer2(check_price)
-      println("do u want to continue    press y to continue & n for no")
-      var read1 = readChar()
-      read1 match {
-        case 'y' => {
-          new customer2(check_price)
-          //calBill(listst, cart_items)
-        }
-        case 'n' => println("thanks for shopping.... ur bill is"+calBill(listst,cart_items))
-      }
-      println("enter y to check order summary & n to not check..")
-      var cal = readChar()
-      cal match {
-        case 'y' => orderSummary(cart_items)
-        case 'n' => 0
-      }
-      println("enter y to check bill  & n for not")
-      var cal1 = readChar()
-      cal1 match {
-        case 'y' => calBill(listst, cart_items)
-        case 'n' => 0
-      }
-    }
-    // calBill(listst,cart_items)
+     case 2 => {
+       println("welcome admin !!!!!!")
+       var obj = new admin
+       obj.entry()
+       //XML.save("C:/Users/hashmap/Downloads/store2.xml", (<catalogue>{item1.map(itemtoXml)}</catalogue>))
 
-    case 2 => {
-      println("welcome admin !!!!!!")
-      //val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml")
-      //val item1 = (file \\ "item").map(toItem)
-      var obj = new admin
-      //XML.save("C:/Users/hashmap/Downloads/store2.xml", (<catalogue>{item1.map(itemtoXml)}</catalogue>))
-      /* println("enter 1 for checking stock..... 2 for giving discounts....")
-
-        println("check stock less than certain value")
-        var change = listBu.filter(_ < 150)
-        println(change)
-        var map2 = map1.filterKeys(_ < 70)
-        println(map2)
-          */
-    }
-  }
+     }
+   }
+ }
 
 
 

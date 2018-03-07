@@ -1,4 +1,5 @@
 
+import scala.collection.mutable
 import scala.collection.mutable._
 import scala.xml._
 class customer2(check_price:Map[String,Double])
@@ -85,7 +86,9 @@ object customer2 extends App {
   var cart_items: Map[String, Int] = Map()
   var map1: Map[Int, String] = Map()
   var check_price: Map[String, Double] = Map()
-
+  var categorySel:Int=0
+  var items1Scheme=ListBuffer[String]()
+  var categorysch=mutable.HashMap[Int,ListBuffer[String]]()
   case class item(id: Int, name: String, uom: String, price: Double, stock: Int)
 
   def itemtoXml(i: item): Node = {
@@ -133,14 +136,59 @@ object customer2 extends App {
     cart_items.foreach(println)
 
   }
+  def checkSchemes1(cart_items:Map[String,Int],categorysch:mutable.HashMap[Int,ListBuffer[String]]): Unit = {
+    if(categorysch.keySet.contains(1))
+      {
+        var valu=categorysch.get(1)
+        var valu1=valu match {
+          case Some(x) => x
+          case None => 0
+        }
+        if(valu1.toString.contains("Dove soap")&&(cart_items.keySet.exists(x => x.equalsIgnoreCase("Dove soap"))))
+          {
+            var va = cart_items.get("Dove soap")
+            println("vaa is " + va)
+            var va1 = va match {
+              case Some(x) => x
+              case None => 0
+            }
+            println("value is " + va1)
+            if (va1 >= 2) {
+              va1 = va1 + 1
+              println("** Congrats u get 1 item free on ur purchase of " + (va1 - 1) + "items")
+              cart_items.update("Dove soap", va1)
+
+            }
+      }
+    /*var y = "dove soap"
+    var abc = cart_items.keySet.exists(x => x.equalsIgnoreCase(y))
+    println("cccc is " + abc)
+    if (cart_items.keySet.exists(x => x.equalsIgnoreCase(y))) {
+      var va = cart_items.get("Dove soap")
+      println("vaa is " + va)
+      var va1 = va match {
+        case Some(x) => x
+        case None => 0
+      }
+      println("value is " + va1)
+      if (va1 >= 2) {
+        va1 = va1 + 1
+        println("** Congrats u get 1 item free on ur purchase of " + (va1 - 1) + "items")
+        cart_items.update("Dove soap", va1)
+
+      }*/
+    }
+  }
+
 
   def calBill(liststo: ListBuffer[Double], cart_items: Map[String, Int]): Unit = {
     println("items bought along with their quantities ")
     cart_items.foreach(println)
     println(cart_items)
     var total_bill = liststo.sum
+    checkSchemes1(cart_items,categorysch)
     println("total is "+total_bill)
-    var itemName=(new admin).checkSchemes()
+    /*var itemName=(new admin).checkSchemes()
     println(itemName)
     var no1=(cart_items.get(itemName))
     println(no1)
@@ -155,7 +203,7 @@ object customer2 extends App {
       println("on purchase of "+no2+"items..... u get free .... "+no3+"items")
       no3=no2+no3
       cart_items.update(itemName,no3)
-    }
+    }*/
     println(cart_items)
 
     println("total bill is " + total_bill)
@@ -174,17 +222,25 @@ object customer2 extends App {
       //item1.foreach(println)
       val item1 = (file \\"items"\\"category")
 
-      var option=readInt()
-      option=option-1
+      var option1=readInt()
+      categorySel=option1
+      option1=option1-1
       //println("items... "+item1(option))
-      var result=(item1(option)\\"item").map(toItemNew)
+      var result=(item1(option1)\\"item").map(toItemNew)
       result.foreach(println)
+      var res=(item1(option1)\\"item"\\"name")
+      for(i<-0 to res.length-1)
+        {
+          items1Scheme+=(res(i).text)
+        }
+        println(items1Scheme)
+      categorysch+=(categorySel->items1Scheme)
       var obj = new customer2(check_price)
       println("do u want to continue    press y to continue & n for no")
       var read1 = readChar()
       read1 match {
         case 'y' => {
-          new customer2(check_price);
+          new customer2(check_price)
           //calBill(listst, cart_items)
         }
         case 'n' => println("thanks for shopping.... ur bill is"+calBill(listst,cart_items))

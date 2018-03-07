@@ -101,9 +101,6 @@ object customer2 extends App {
 
 
   def toItem(node: Node): item = {
-    println("enter ur choice 1 for soap.... 2 for fruits....")
-    var read=readInt()
-
     val id = (node \\"item" \ "id").text.toInt
     val name = (node \ "name").text
     val uom = (node \ "uom").text
@@ -129,12 +126,52 @@ object customer2 extends App {
     listBu += stock
     item(id, name, uom, price, stock)
   }
+  def toItemNewScheme(node: Node): item = {
 
+    val id = (node \\"item" \ "id").text.toInt
+    val name = (node \ "name").text
+    val uom = (node \ "uom").text
+    val stock = (node \\ "stock").text.toInt
+    val price = (node \\ "amount").text.toDouble
+    //println("price is "+price)
+    var list = List(id, name, uom, stock, price)
+    //map1 += (stock -> name)
+  //  check_price += (name -> price)
+    //listBu += stock
+    item(id, name, uom, price, stock)
+  }
   //to calculate bill
   def orderSummary(cart_items: Map[String, Int]): Unit = {
     println("ur orders are as follows.... ")
     cart_items.foreach(println)
 
+  }
+  def addScheme()
+  {
+    println("** Enter category u want to provide discount  **");
+    var read=readInt()
+    var categorySel=read
+    read=read-1
+    val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml");
+    val item1 = (file \\"items"\\"category")
+    var result=(item1(read)\\"item").map(toItemNewScheme)
+    result.foreach(println)
+    var res=(item1(read)\\"item"\\"name")
+    for(i<-0 to res.length-1)
+    {
+      items1Scheme+=(res(i).text)
+    }
+    println(items1Scheme)
+    categorysch+=(categorySel->items1Scheme)
+    println(categorysch)
+    println("enter discount % age")
+    var dis=readInt()
+    return(items1Scheme,dis)
+  }
+  def checkSchemeNew()
+  {
+    var add=addScheme()
+    return(add)
   }
   def checkSchemes1(cart_items:Map[String,Int],categorysch:mutable.HashMap[Int,ListBuffer[String]]): Unit = {
     if(categorysch.keySet.contains(1))
@@ -186,8 +223,60 @@ object customer2 extends App {
     cart_items.foreach(println)
     println(cart_items)
     var total_bill = liststo.sum
-    checkSchemes1(cart_items,categorysch)
-    println("total is "+total_bill)
+    println("total bill is "+total_bill)
+    var obj=new admin
+   var abc= obj.uploadSchemes()
+    println("list is "+abc._1)
+    println("price is "+abc._2)
+    var discount=abc._2
+    var abcd=cart_items.keySet
+    for(i<-0 to (abc._1.length)-1)
+      {
+        for(j<- abcd) {
+          if (j == (abc._1(i)))
+          {
+            println("discount is "+discount)
+            total_bill=total_bill-discount
+            println("Bill after discount is "+total_bill)
+          }
+        }
+      }
+    /*var main_key=abc._1.keys
+    var abcd=abc._1.get(main_key.head)
+      println("abcd value is"+abcd)
+    var item_final=abcd match
+      {
+      case Some(x)=>x
+      case None=>0
+      }*/
+   // if(cart_items.keySet.exists(x => x.equalsIgnoreCase(item_final.toString.))))
+    //println("final "+item_final)
+   /* if(abc._1.keySet.contains(1))
+    {
+      var valu=categorysch.get(1)
+      var valu1=valu match {
+        case Some(x) => x
+        case None => 0
+      }
+      if(valu1.toString.contains("Dove soap")&&(cart_items.keySet.exists(x => x.equalsIgnoreCase("Dove soap"))))
+      {
+        var va = cart_items.get("Dove soap")
+        println("vaa is " + va)
+        var va1 = va match {
+          case Some(x) => x
+          case None => 0
+        }
+        println("value is " + va1)
+        if (va1 >= 2) {
+          va1 = va1 + 1
+          println("** Congrats u get 1 item free on ur purchase of " + (va1 - 1) + "items")
+          cart_items.update("Dove soap", va1)
+
+        }*/
+   // checkSchemes1(cart_items,categorysch)
+   // var addd=checkSchemeNew()
+    //println(addd)
+    //println("total is "+total_bill)
     /*var itemName=(new admin).checkSchemes()
     println(itemName)
     var no1=(cart_items.get(itemName))
@@ -262,8 +351,8 @@ object customer2 extends App {
 
     case 2 => {
       println("welcome admin !!!!!!")
-      val file = XML.loadFile("C:/Users/hashmap/Downloads/store.xml")
-      val item1 = (file \\ "item").map(toItem)
+      //val file = XML.loadFile("C:/Users/hashmap/Downloads/category.xml")
+      //val item1 = (file \\ "item").map(toItem)
       var obj = new admin
       //XML.save("C:/Users/hashmap/Downloads/store2.xml", (<catalogue>{item1.map(itemtoXml)}</catalogue>))
       /* println("enter 1 for checking stock..... 2 for giving discounts....")

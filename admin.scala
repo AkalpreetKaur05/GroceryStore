@@ -13,7 +13,7 @@ class admin
   val price = (node \\ "amount").text.toDouble
     println("stock of "+name+"is "+stock )
   var list = List(id, name, uom, stock, price)
-  map1 += (stock -> name)
+  map1 += (name->stock)
   if(stock<70)
     {
       lessStock+=(name->stock)
@@ -40,25 +40,26 @@ class admin
     val price = (node \\ "amount").text.toDouble
     println("price is "+price)
     var list = List(id, name, uom, stock, price)
-    map1 += (stock -> name)
+    map1 += (name->stock)
     check_price += (name -> price)
     listBu += stock
     item(id, name, uom, price, stock)
   }
   def uploadSchemes():(ListBuffer[String],Int)=
    {
-     println("Schemes available on categories"+categorysch.keySet+"and on items"+categorysch.values.toBuffer)
-     categorysch.values.toBuffer
-     return(items1Scheme,discount)
+     println("Schemes available on categories"+categoryschadmin.keySet+"and on items"+categoryschadmin.values)
+     println(categoryschadmin)
+     println(items1Schemeadmin)
+     categoryschadmin.values.toBuffer
+     return(items1Schemeadmin,discount)
    }
   var lessStock:Map[String,Int]=Map()
   var categorySel:Int=0
-  var items1Scheme=ListBuffer[String]()
-  var categorysch=HashMap[Int,ListBuffer[String]]()
-  items1Scheme+=("Dove soap")
-  items1Scheme+=("Lux bath soap")
-  categorysch+=(1->items1Scheme)
-  var discount=50
+ // var items1Scheme=ListBuffer[String]()
+  //var categorysch=HashMap[Int,ListBuffer[String]]()
+ // items1Scheme+=("Dove soap")
+    //items1Scheme+=("Lux bath soap")
+  //categorysch+=(1->items1Scheme)
 
 
   def entry()
@@ -85,14 +86,21 @@ class admin
              var res=(item1(read)\\"item"\\"name")
              for(i<-0 to res.length-1)
               {
-                items1Scheme+=(res(i).text)
+                if(items1Schemeadmin.contains(res(i).text))
+                  {
+                    println(res(i).text)
+                    items1Schemeadmin=items1Schemeadmin
+                  }
+                else {
+                  items1Schemeadmin += (res(i).text)
+                }
               }
-             println(items1Scheme)
+             println("after adding "+items1Schemeadmin)
              println("enter discount")
              discount=readInt()
-             categorysch.remove(1)
-             categorysch+=(categorySel->items1Scheme)
-             println(categorysch)
+             //categorysch.remove(1)
+             categoryschadmin+=(categorySel->items1Schemeadmin)
+             println(categoryschadmin)
              uploadSchemes()
             // addScheme()
             }

@@ -35,6 +35,16 @@ class customer2(check_price:Map[String,Double]) {
       new_value = new_value + quantity
       customer2.cart_items.update(item_name, new_value)
     }
+    var stt=customer2.map1.get(item_name)
+    var stt2=stt match
+      {
+      case Some(x)=>x
+      case None=>0
+      }
+    stt2=stt2-quantity
+    customer2.map1.update(item_name,stt2)
+    println("updated stock is "+customer2.map1)
+
     customer2.listst += customer2.bill
     println("do u want to remove any item from cart???")
     println("** y for yes **")
@@ -73,8 +83,18 @@ class customer2(check_price:Map[String,Double]) {
               case Some(x)=>x
               case None=>0
               }
+            var st=customer2.map1.get(item_na)
+            var st2=st match
+              {
+               case Some(x)=>x
+               case none=>0
+              }
+            st2=st2+quantity
+            customer2.map1.update(item_na,st2)
+            println("after removal items in stock are "+customer2.map1)
             customer2.bill=customer2.bill-(price2*quantity)
             println("after removal bill is "+customer2.bill)
+            println("Item removed successfully....")
           }
         }
       }
@@ -94,7 +114,7 @@ object customer2 extends App {
   var listst = ListBuffer[Double]()
   var nameStore = ListBuffer[String]()
   var cart_items: Map[String, Int] = Map()
-  var map1: Map[Int, String] = Map()
+  var map1: Map[String,Int] = Map()
   var check_price: Map[String, Double] = Map()
   var categorySel: Int = 0
   var items1Scheme = ListBuffer[String]()
@@ -107,34 +127,26 @@ object customer2 extends App {
 
   def itemtoXml(i: item): Node = {
     <item>
-      <id>=
-        {i.id - 4}
-      </id>
-      <name>
-        {i.name}
-      </name>
-      <uom>
-        {i.uom}
-      </uom>
-      <stock>
-        {i.stock}
-      </stock>
-    </item>
+      <id>={i.id - 4}</id>
+      <name>{i.name}</name>
+      <uom>{i.uom}</uom>
+      <stock>{i.stock}</stock></item>
   }
 
 
-  def toItem(node: Node): item = {
+  /*def toItem(node: Node): item = {
     val id = (node \\ "item" \ "id").text.toInt
     val name = (node \ "name").text
     val uom = (node \ "uom").text
     val stock = (node \\ "stock").text.toInt
     val price = (node \\ "amount").text.toDouble
     var list = List(id, name, uom, stock, price)
-    map1 += (stock -> name)
+    map1 += (name->stock)
+    println("stock of diff items is "+map1)
     check_price += (name -> price)
     listBu += stock
     item(id, name, uom, price, stock)
-  }
+  }*/
 
   def toItemNew(node: Node): item = {
 
@@ -145,14 +157,15 @@ object customer2 extends App {
     val price = (node \\ "amount").text.toDouble
     println("price is " + price)
     var list = List(id, name, uom, stock, price)
-    map1 += (stock -> name)
+    map1 += (name->stock)
+    println("stocks are "+map1)
     check_price += (name -> price)
     println("items prices are " + check_price)
     listBu += stock
     item(id, name, uom, price, stock)
   }
 
-  def toItemNewScheme(node: Node): item = {
+  /*def toItemNewScheme(node: Node): item = {
 
     val id = (node \\ "item" \ "id").text.toInt
     val name = (node \ "name").text
@@ -161,11 +174,12 @@ object customer2 extends App {
     val price = (node \\ "amount").text.toDouble
     //println("price is "+price)
     var list = List(id, name, uom, stock, price)
-    //map1 += (stock -> name)
+    map1 += (name->stock)
+    println(map1)
     //  check_price += (name -> price)
     //listBu += stock
     item(id, name, uom, price, stock)
-  }
+  }*/
 
   //to calculate bill
   def orderSummary(cart_items: Map[String, Int]): Unit = {
@@ -174,7 +188,7 @@ object customer2 extends App {
 
   }
 
-  def addScheme() {
+  /*def addScheme() {
     println("** Enter category u want to provide discount  **");
     var read = readInt()
     var categorySel = read
@@ -193,12 +207,12 @@ object customer2 extends App {
     println("enter discount % age")
     var dis = readInt()
     return (items1Scheme, dis)
-  }
+  }*/
 
-  def checkSchemeNew() {
+ /* def checkSchemeNew() {
     var add = addScheme()
     return (add)
-  }
+  }*/
 
   def checkSchemes1(cart_items: Map[String, Int], categorysch: mutable.HashMap[Int, ListBuffer[String]]): Unit = {
     if (categorysch.keySet.contains(1)) {
@@ -320,6 +334,26 @@ object customer2 extends App {
 
     println("total bill is " + total_bill)
   }
+  /*def accesscategory(): Unit =
+  {
+    println("** Enter ur Choice **")
+    println("** 1. To Buy Pdts ** ")
+    println("** 2. To check Order Summary **")
+    println("** 3. To Remove items from Cart **")
+    println("** 4. To show Bill **")
+    var red=readInt()
+    red match
+      {
+      case 2=>orderSummary(cart_items)
+      case 3=>{println("enter item u want to remove & quantity")
+               var read1=readLine()
+               var quantity=readInt()
+                new customer2(check_price).removefromcart(read1,quantity,cart_items,itemPrice)
+
+              }
+      }
+  }*/
+
 
   def mainn1() {
     println("enter 1 for customer login & 2 for admin login")
@@ -359,6 +393,7 @@ object customer2 extends App {
           }
           case 'n' => println("thanks for shopping.... ur bill is" + calBill(bill, cart_items))
         }
+
         println("enter y to check order summary & n to not check..")
         var cal = readChar()
         cal match {

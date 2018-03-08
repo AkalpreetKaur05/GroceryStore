@@ -119,8 +119,13 @@ object customer2 extends App {
   var categorySel: Int = 0
   var items1Scheme = ListBuffer[String]()
   var categorysch = mutable.HashMap[Int, ListBuffer[String]]()
+  var items1Schemeadmin = ListBuffer[String]()
+  var categoryschadmin = mutable.HashMap[Int, ListBuffer[String]]()
   var itemPrice = Map[String, Double]()
   var bill:Double=0.0
+  var discount:Int=0
+ // var items1Scheme=ListBuffer[String]()
+  //var categorysch=HashMap[Int,ListBuffer[String]]()
   mainn1()
 
   case class item(id: Int, name: String, uom: String, price: Double, stock: Int)
